@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'https://rn-youtube-frontend.vercel.app/',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   },
@@ -18,7 +18,7 @@ const io = new Server(server, {
 
 app.use(
 	cors({
-    origin: 'https://rn-youtube-frontend.vercel.app/',
+    origin: '*',
 		credentials: true,
 	})
 );
