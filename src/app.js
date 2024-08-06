@@ -18,7 +18,7 @@ const io = new Server(server, {
 
 app.use(
 	cors({
-		origin: 'http://localhost:3000',
+    origin: 'https://rn-youtube-frontend.vercel.app/',
 		credentials: true,
 	})
 );
