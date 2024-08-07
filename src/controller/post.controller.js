@@ -195,3 +195,24 @@ export const getRecentPosts = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 });
+
+// Get all posts by a specific tag ID
+export const getPostsByTagId = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    console.log("tagId", req.params,id);
+
+    try {
+        // Find all posts that have the given tag id
+        const posts = await Post.find({ postTags: id })
+            .populate('author', 'userName email')
+            .populate('postTags', 'title'); // Populate category titles
+        
+        if (posts.length === 0) {
+            return res.status(404).json({ message: "No posts found for this tag" });
+        }
+
+        res.status(200).json({ posts });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+});

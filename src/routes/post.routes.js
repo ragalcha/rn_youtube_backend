@@ -10,7 +10,8 @@ import {
     deletePost,
     getPosts,
     getPostById,
-    getRecentPosts
+    getRecentPosts,
+    getPostsByTagId
 } from "../controller/post.controller.js";
 
 // Setup multer storage
@@ -53,5 +54,7 @@ router.route('/post/:id')
     .get(verifyJWT, getPostById);
 
 router.route('/recentposts').get(getRecentPosts);
+
+router.route('/postsbytag/:id').get(getPostsByTagId);
 
 export default router;

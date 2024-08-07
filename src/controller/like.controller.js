@@ -52,7 +52,13 @@ export const getLikedVideosByUser = async (req, res) => {
 
     try {
         // Find all likes for the user and populate the video details
-        const likedVideos = await Like.find({ user: userId }).populate('video');
+        const likedVideos = await Like.find({ user: userId }).populate({
+            path: 'video',
+            populate: {
+                path: 'postTags', // Populate the postTags field in the video
+                model: 'Category' // Assuming your Category model is named 'Category'
+            }
+        });
 
         if (!likedVideos.length) {
             return res.status(404).json(new ApiResponse(404, {}, 'No liked videos found.'));
