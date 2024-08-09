@@ -61,7 +61,7 @@ export const getLikedVideosByUser = async (req, res) => {
         });
 
         if (!likedVideos.length) {
-            return res.status(404).json(new ApiResponse(404, {}, 'No liked videos found.'));
+            return res.status(202).json(new ApiResponse(202, {}, 'No video found.'));
         }
 
         res.status(200).json(new ApiResponse(200, likedVideos, 'Liked videos fetched successfully.'));

@@ -47,19 +47,24 @@ import postRouter from "./routes/post.routes.js";
 import categoryRouter from "./routes/category.routes.js";
 import userRolesRouter from "./routes/userrole.routes.js";
 import likeRouter from "./routes/like.routes.js";
+import subscriptionRouter from "./routes/subscription.routes.js";
+import paymentRouter from "./routes/payment.routes.js";
+
 app.use("/api/v1/post", postRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/userrole", userRolesRouter);
 app.use("/api/v1/like", likeRouter);
+app.use("/api/v1/subscription", subscriptionRouter);
+app.use("/api/v1/payment", paymentRouter);
 
 // Socket.io connection handling
-// io.on('connection', (socket) => {
-//   console.log('A user connected:', socket.id);
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
 
-//   socket.on('disconnect', () => {
-//     console.log('User disconnected:', socket.id);
-//   });
-// });
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
 
 export { server as app, io };

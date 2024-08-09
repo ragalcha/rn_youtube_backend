@@ -35,6 +35,30 @@ const customerSchema = new Schema(
 		refreshToken: {
 			type: String,
 		},
+		trialExpiresAt: {
+            type: Date,  // To store the start date of the trial
+        },
+		trialStartedAt: {
+            type: Date,  // To store the start date of the trial
+        },
+        trialActive: {
+            type: Boolean,
+            default: false,  // To indicate if the trial is currently active
+        },
+        subscriptionActive: {
+            type: Boolean,
+            default: false,  // To indicate if the trial is currently active
+        },
+		subscriptionPlan: {
+			type: Schema.Types.ObjectId,
+			ref: 'Subscription'
+		},
+		subscriptionExpiresAt: {
+            type: Date,  // To store the start date of the subscription
+        },
+		subscriptionStartedAt: {
+            type: Date,  // To store the start date of the subscription
+        }
 	},
 	{ timestamps: true }
 );
