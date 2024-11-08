@@ -9,7 +9,8 @@ import {Subscription} from '../models/subscription.model.js';
 // register user controller post request api/v1/user/register
 const registerUser = asyncHandler(async (req, res) => {
 	// access data from the form-data
-	const [firstName, lastName, userName, email, password,userRole] = [
+  //console.log("i am inter inside the the register user ---------->");
+	const [firstName, lastName, userName, email, password, userRole = 0] = [
 		req.body.firstName,
 		req.body.lastName,
 		req.body.userName,
@@ -17,7 +18,7 @@ const registerUser = asyncHandler(async (req, res) => {
 		req.body.password,
 		req.body.userRole ? req.body.userRole : 0,
 	];
-	console.log(firstName, lastName, userName, email, password);
+	//console.log("user details -->",firstName, lastName, userName, email, password);
 	if (firstName && lastName && userName && email && password) {
 		try {
 			// check user exist or not
@@ -41,24 +42,40 @@ const registerUser = asyncHandler(async (req, res) => {
 						)
 					);
 			}
+      if(userRole == 0){
+        			// create new customer
+        //console.log("user role-->",userRole);
+        const customer = new Customer({
+          firstName,
+          lastName,
+          userName,
+          email,
+          password,
+        });
+        const result = await customer.save();
+        var createdUser = await Customer.findById(result._id).select(
+          "-password -refreshToken"
+        );
+      }else{
+        			// create new customer
+        const customer = new Customer({
+          firstName,
+          lastName,
+          userName,
+          email,
+          password,
+          userRole
+        });
+        const result = await customer.save();
+        var createdUser = await Customer.findById(result._id).select(
+          "-password -refreshToken"
+        );
+      }
 
-			// create new customer
-			const customer = new Customer({
-				firstName,
-				lastName,
-				userName,
-				email,
-				password,
-				userRole
-			});
-			const result = await customer.save();
-			const createdUser = await Customer.findById(result._id).select(
-				"-password -refreshToken"
-			);
 
 			// checking if user created or not
 			if (!createdUser) {
-				console.log("user not created");
+			//	//console.log("user not created");
 				throw new ApiError(
 					500,
 					"Something went wrong while registering the user"
@@ -94,12 +111,13 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
 	// take data
 	const { email, userName, password } = req.body;
-	console.log("i am email-->", email, req.body.email);
-	console.log("i am user name-->", userName, req.body.userName);
-	console.log("i am password-->", password, req.body.password);
+	
+  //console.log("i am email-->", email, req.body.email);
+	//console.log("i am user name-->", userName, req.body.userName);
+	//console.log("i am password-->", password, req.body.password);
 	// 	// username or email
 	if (!userName && !email) {
-		console.log("username or email is required");
+		//console.log("username or email is required");
 		return res
 			.status(401)
 			.json(
@@ -173,7 +191,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const logoutUser = asyncHandler(async (req, res) => {
 	// here we removed refresh token from the database
-	console.log("logout processing ------------------->");
+	//console.log("logout processing ------------------->");
 	await Customer.findByIdAndUpdate(
 		req.user._id,
 		{
@@ -187,7 +205,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 	);
 
 	// here we cleared tokens from cookies
-	console.log("user logout successfully");
+	//console.log("user logout successfully");
 	return res
 		.status(200)
 		.clearCookie("accessToken", OPTIONS)
@@ -215,20 +233,20 @@ const getUserBYId = asyncHandler(async (req, res) => {
 			)
 		);
 	} catch (error) {
-		console.error("Error fetching user:", error);
+		//console.error("Error fetching user:", error);
 		res.status(500).json({ message: "Server error" });
 	}
 })
 // update user controller put request api/v1/user/update/:id
 // Update user with role
 const updateUser = asyncHandler(async (req, res) => {
-	console.log("req.body--->", req.body);
+	//console.log("req.body--->", req.body);
 	const userId = req.params.id; // Get the user ID from the request parameters
 	const { firstName, lastName, userName, email, password, userRole, freeTrial ,subscriptionActive, subscriptionId, subscriptionDuration} = req.body;
-	console.log('subscriptionId--->',subscriptionId,  subscriptionDuration);
+	//console.log('subscriptionId--->',subscriptionId,  subscriptionDuration);
 	try {
 		// Find the user by ID
-		console.log("user id-->", firstName, lastName, userName, email, password, userRole, "req.body", req.body);
+		//console.log("user id-->", firstName, lastName, userName, email, password, userRole, "req.body", req.body);
 		const user = await Customer.findById(userId).populate('userRole');
 
 		// Check if the user exists
@@ -247,7 +265,7 @@ const updateUser = asyncHandler(async (req, res) => {
 		if (userRole) user.userRole = userRole; // Update user role        // Handle trial activation
 		if (freeTrial && !subscriptionActive) {
 			if (!user.trialActive) {
-				console.log("free trial activated");
+				//console.log("free trial activated");
 				user.trialActive = true;
 				user.trialStartedAt = new Date(); // Record the start date of the trial
 				user.trialExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
@@ -285,7 +303,7 @@ const updateUser = asyncHandler(async (req, res) => {
 				const updatedUser = await user.save();
 				// Return response
 				const userDetails = await Customer.findById(userId).populate('userRole').populate('subscriptionPlan');
-				console.log("updated user--->",userDetails);
+				//console.log("updated user--->",userDetails);
 				return res.status(200).json(
 					new ApiResponse(
 						200,
@@ -317,7 +335,7 @@ const updateUser = asyncHandler(async (req, res) => {
 			)
 		);
 	} catch (error) {
-		console.error("Error updating user:", error);
+		//console.error("Error updating user:", error);
 		return res.status(500).json(
 			new ApiResponse(500, {}, "Server error")
 		);
@@ -337,7 +355,7 @@ const getAllCustomers = asyncHandler(async (req, res) => {
 			)
 		);
 	} catch (error) {
-		console.error("Error fetching customers:", error);
+		//console.error("Error fetching customers:", error);
 		return res.status(500).json(
 			new ApiResponse(500, {}, "Server error")
 		);
@@ -357,7 +375,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 		return res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
 	} catch (error) {
-		console.error("Error deleting user:", error);
+		//console.error("Error deleting user:", error);
 		return res.status(500).json(new ApiResponse(500, {}, "Server error"));
 	}
 });

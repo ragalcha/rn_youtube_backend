@@ -4,9 +4,9 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 // Like a video
 export const likeVideo = async (req, res) => {
     const { videoId } = req.params;
-    console.log("i am here",req.params);
+    //console.log("i am here",req.params);
     const userId = req.user._id; // Assuming user ID is stored in req.user
-    console.log("video , and user id ",videoId, userId);
+    //console.log("video , and user id ",videoId, userId);
     try {
         // Check if the video is already liked
         const existingLike = await Like.findOne({ user: userId, video: videoId });
@@ -21,7 +21,7 @@ export const likeVideo = async (req, res) => {
 
         res.status(201).json(new ApiResponse(201, newLike, 'Video liked successfully.'));
     } catch (error) {
-        console.error('Error liking video:', error);
+        //console.error('Error liking video:', error);
         res.status(500).json(new ApiResponse(500, {}, 'Failed to like video.'));
     }
 };
@@ -29,7 +29,7 @@ export const likeVideo = async (req, res) => {
 // Unlike a video
 export const unlikeVideo = async (req, res) => {
     const { likeId } = req.params;
-     console.log("like id ", likeId);
+     //console.log("like id ", likeId);
 
     try {
         // Find and remove the like
@@ -41,7 +41,7 @@ export const unlikeVideo = async (req, res) => {
 
         res.status(200).json(new ApiResponse(200, deletedLike, 'Video unliked successfully.'));
     } catch (error) {
-        console.error('Error unliking video:', error);
+        //console.error('Error unliking video:', error);
         res.status(500).json(new ApiResponse(500, {}, 'Failed to unlike video.'));
     }
 };
@@ -66,7 +66,7 @@ export const getLikedVideosByUser = async (req, res) => {
 
         res.status(200).json(new ApiResponse(200, likedVideos, 'Liked videos fetched successfully.'));
     } catch (error) {
-        console.error('Error fetching liked videos:', error);
+        //console.error('Error fetching liked videos:', error);
         res.status(500).json(new ApiResponse(500, {}, 'Failed to fetch liked videos.'));
     }
 };

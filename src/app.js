@@ -49,7 +49,7 @@ import userRolesRouter from "./routes/userrole.routes.js";
 import likeRouter from "./routes/like.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
-
+console.log("finding the rout");
 app.use("/api/v1/post", postRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/category", categoryRouter);

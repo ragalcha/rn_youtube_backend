@@ -25,14 +25,14 @@ export const createPost = async (req, res) => {
     if (req.files) {
         if (req.files.image) {
             const imageUploadResponse = await uploadOnCloudinary(req.files.image[0].path);
-            console.log("imageUploadResponse------>", imageUploadResponse);
+            //console.log("imageUploadResponse------>", imageUploadResponse);
             if (imageUploadResponse) {
                 image_url = imageUploadResponse.url;
             }
         }
         if (req.files.video) {
             const videoUploadResponse = await uploadOnCloudinary(req.files.video[0].path);
-            console.log("videoUploadResponse------>", videoUploadResponse);
+            //console.log("videoUploadResponse------>", videoUploadResponse);
             if (videoUploadResponse) {
                 video_url = videoUploadResponse.url;
             }
@@ -47,15 +47,15 @@ export const createPost = async (req, res) => {
         tagArray = postTags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
     }
 
-    console.log("tagArray------>", tagArray);
+    //console.log("tagArray------>", tagArray);
 
     // Find category IDs
     const categoryIds = await Category.find({ title: { $in: tagArray } }).select('_id');
-    console.log("categoryIds------>", categoryIds);
+    //console.log("categoryIds------>", categoryIds);
 
     // Create array of category IDs
     const categoryIdsArray = categoryIds.map(category => category._id);
-    console.log("categoryIdsArray------>", categoryIdsArray);
+    //console.log("categoryIdsArray------>", categoryIdsArray);
 
     try {
         const post = new Post({
@@ -76,7 +76,7 @@ export const createPost = async (req, res) => {
 
         return res.status(201).json(new ApiResponse(201, post, "Post created successfully"));
     } catch (error) {
-        console.error("Error creating post:", error);
+        //console.error("Error creating post:", error);
         return res.status(500).json(new ApiResponse(500, error.message, "Something went wrong"));
     }
 };
@@ -130,7 +130,7 @@ export const updatePost = asyncHandler(async (req, res) => {
 
 // Delete a post by ID
 export const deletePost = asyncHandler(async (req, res) => {
-    console.log("req.params----------------->", req.params);
+    //console.log("req.params----------------->", req.params);
     const { id } = req.params;
     try {
         const post_old = await Post.findById(id);
@@ -154,7 +154,7 @@ export const getPosts = asyncHandler(async (req, res) => {
         const posts = await Post.find()
             .populate('author', 'userName email')
             .populate('postTags', 'title'); // Populate category titles
-            // console.log("all post", posts);
+            // //console.log("all post", posts);
         res.status(200).json({ posts });
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
@@ -199,7 +199,7 @@ export const getRecentPosts = asyncHandler(async (req, res) => {
 // Get all posts by a specific tag ID
 export const getPostsByTagId = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    console.log("tagId", req.params,id);
+    //console.log("tagId", req.params,id);
 
     try {
         // Find all posts that have the given tag id

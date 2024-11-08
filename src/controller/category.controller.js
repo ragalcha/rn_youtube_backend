@@ -43,7 +43,7 @@ const createCategory = asyncHandler(async (req, res) => {
             );
             // checking if user created or not
             if (!createdCategory) {
-                console.log("category not created");    
+                //console.log("category not created");    
                 throw new ApiError(
                     500,
                     "category not created",
@@ -114,7 +114,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
             new ApiResponse(200, deletedCategory, "Category deleted successfully")
         );
     } catch (error) {
-        console.error("Error deleting category:", error);
+        //console.error("Error deleting category:", error);
         return res.status(500).json(
             new ApiResponse(500, {}, "Server error")
         );
@@ -132,7 +132,7 @@ const getAllCategories = asyncHandler(async (req, res) => {
             new ApiResponse(200, categories, "Categories fetched successfully")
         );
     } catch (error) {
-        console.error("Error fetching categories:", error);
+        //console.error("Error fetching categories:", error);
         return res.status(500).json(
             new ApiResponse(500, {}, "Server error")
         );
